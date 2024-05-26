@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome Email Generator</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Welcome Email Generator</h1>
+      <form id="welcome-email-form">
+        <div class="form-group">
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="name" required />
+        </div>
+        <div class="form-group">
+          <label for="experience">Years of Experience:</label>
+          <input
+            type="number"
+            id="experience"
+            name="experience"
+            min="0"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="past-companies">Past Companies:</label>
+          <textarea
+            id="past-companies"
+            name="past-companies"
+            required
+          ></textarea>
+        </div>
+        <div class="form-group">
+          <label for="profile-picture">Profile Picture:</label>
+          <input
+            type="file"
+            id="profile-picture"
+            name="profile-picture"
+            accept="image/*"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="email-address">Email Address:</label>
+          <input
+            type="email"
+            id="email-address"
+            name="email-address"
+            required
+          />
+        </div>
+        <button type="submit">Send Welcome Email</button>
+      </form>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
