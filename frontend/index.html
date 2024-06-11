@@ -3,16 +3,32 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Welcome Email Generator</title>
+    <title>Welcome to Welcome Email Sender</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div class="container">
       <h1>Welcome Email Generator</h1>
-      <form id="welcome-email-form">
+      <form id="welcome-email-form" enctype="multipart/form-data">
         <div class="form-group">
           <label for="name">Name:</label>
-          <input type="text" id="name" name="name" required />
+          <input
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Enter the name"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="designation">Designation:</label>
+          <input
+            type="text"
+            id="designation"
+            name="designation"
+            placeholder="Enter the designation"
+            required
+          />
         </div>
         <div class="form-group">
           <label for="experience">Years of Experience:</label>
@@ -20,6 +36,7 @@
             type="number"
             id="experience"
             name="experience"
+            placeholder="Enter years of experience"
             min="0"
             required
           />
@@ -29,6 +46,7 @@
           <textarea
             id="past-companies"
             name="past-companies"
+            placeholder="Enter past companies (separated by semicolon)"
             required
           ></textarea>
         </div>
@@ -43,15 +61,55 @@
           />
         </div>
         <div class="form-group">
-          <label for="email-address">Email Address:</label>
+          <label for="sender-email">Sender Email:</label>
           <input
             type="email"
-            id="email-address"
-            name="email-address"
+            id="sender-email"
+            name="sender-email"
+            placeholder="Enter the sender email"
             required
           />
         </div>
-        <button type="submit">Send Welcome Email</button>
+        <div class="form-group">
+          <label for="sender-password">Sender Email Password:</label>
+          <input
+            type="password"
+            id="sender-password"
+            name="sender-password"
+            placeholder="Enter the sender email password"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="receiver-emails">Receiver Emails:</label>
+          <input
+            type="text"
+            id="receiver-emails"
+            name="receiver-emails"
+            placeholder="Enter receiver emails (separated by semicolon)"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="regards">Regards:</label>
+          <textarea
+            id="regards"
+            name="regards"
+            placeholder="Enter the regards message"
+            required
+          ></textarea>
+        </div>
+        <div class="form-group">
+          <label for="subject">Subject:</label>
+          <input
+            type="text"
+            id="subject"
+            name="subject"
+            placeholder="Enter the email subject"
+            required
+          />
+        </div>
+        <button type="submit" class="btn">Send Welcome Email</button>
       </form>
     </div>
     <script src="script.js"></script>
