@@ -5,7 +5,6 @@ const nodemailer = require('nodemailer');
 const multer = require('multer');
 const fs = require('fs');
 const app = express();
-const Buffer = require('buffer').Buffer;
 const port = process.env.PORT || 8000;
 require('dotenv').config();
 
@@ -43,154 +42,10 @@ const getBase64Image = (filePath) => {
 const logoBase64 = getBase64Image(path.join(__dirname, 'public/logo.png'));
 const truckBase64 = getBase64Image(path.join(__dirname, 'public/truck.png'));
 
-const emailTemplate = handlebars.compile(`
-<!DOCTYPE html>
-<html>
- <head>
-   <meta charset="UTF-8">
-   <title>Welcome to OM Logistics Ltd.</title>
-   <style type="text/css">
-     body, table, td, p, a, h1, h2 {
-       font-family: Arial, sans-serif;
-     }
-     table {
-       max-width: 600px;
-       margin: 0 auto;
-       background-color: #ffffff;
-       border-collapse: collapse;
-     }
-     td {
-       padding: 0;
-     }
-     img {
-       border: 0;
-       max-width: 100%;
-       height: auto;
-     }
-     .header {
-       background-color: #002266;
-       padding: 20px;
-       text-align: center;
-     }
-     .header img {
-       max-width: 200px;
-     }
-     .banner {
-       background-color: #0080D5;
-       padding: 20px;
-       text-align: center;
-       position: relative;
-       overflow: hidden;
-     }
-     .banner h1 {
-       color: #FFFFFF;
-       font-size: 24px;
-       margin: 0;
-       z-index: 1;
-       position: relative;
-     }
-     .profile {
-       padding: 20px;
-       text-align: center;
-       display: flex;
-       justify-content: center;
-       align-items: center;
-     }
-     .profile-info {
-       text-align: left;
-       margin-right: 20px;
-     }
-     .profile img {
-       width: 120px;
-       height: 120px;
-       border-radius: 50%;
-       object-fit: cover;
-     }
-     .profile h2 {
-       color: #333333;
-       font-size: 20px;
-       margin: 10px 0;
-     }
-     .profile p {
-       color: #666666;
-       font-size: 16px;
-       margin: 0;
-     }
-     .content {
-       padding: 20px;
-     }
-     .content p {
-       margin: 10px 0;
-       line-height: 1.5;
-     }
-     .regards {
-       margin-top: 20px;
-     }
-     .real-footer {
-       background-color: #002266;
-       color: #FFFFFF;
-       font-size: 12px;
-       padding: 10px;
-       text-align: center;
-     }
-   </style>
- </head>
- <body>
-   <table width="100%" border="0" cellspacing="0" cellpadding="0">
-     <tr>
-       <td align="center">
-         <table border="0" cellspacing="0" cellpadding="0">
-           <tr>
-             <td class="header">
-               <img src="{{logoBase64}}" alt="OM Logistics Ltd. Logo">
-             </td>
-           </tr>
-           <tr>
-             <td class="banner">
-               <h1>Welcome to OM Logistics Ltd.</h1>
-             </td>
-           </tr>
-           <tr>
-             <td class="profile">
-               <div class="profile-info">
-                 <img src="{{profilePictureBase64}}" alt="{{name}}'s Profile Picture">
-                 <h2>{{name}}</h2>
-                 <p>{{designation}}</p>
-               </div>
+const mjml2html = require('mjml');
+const welcomeEmailMJML = fs.readFileSync(path.join(__dirname, 'welcome-email.mjml'), 'utf8');
 
-             </td>
-           </tr>
-           <tr>
-             <td class="content">
-               <p>Dear All,</p>
-               <p>I'm delighted to announce that we have a new addition to our team, {{name}}, who has joined us as our new {{designation}}.</p>
-               <p>We're truly excited to have {{name}} join us!</p>
-               <p>Let's take a moment to extend a heartfelt welcome to {{name}} and ensure {{name}} feels like a valued member of our team from the start.</p>
-               <p>With {{experience}}+ years of experience gained from esteemed companies like {{pastCompanies}}, {{name}} brings a wealth of expertise to our team.</p>
-               <p>Let's work together to ensure {{name}}'s journey with us is both positive and memorable. I'm eager to witness the undoubtedly positive impact {{name}} will bring to our team.</p>
-               <p>Once again, please join me in warmly welcoming {{name}}.</p>
-               <div class="regards">
-                 <p>{{regards}}</p>
-               </div>
-             </td>
-           </tr>
-           <tr>
-             <td class="real-footer">
-               &copy; 2024, Om Logistics Ltd. All Rights Reserved
-             </td>
-           </tr>
-         </table>
-       </td>
-     </tr>
-   </table>
- </body>
-</html>
-
-
-
-
-
-`);
+const emailTemplate = handlebars.compile(mjml2html(welcomeEmailMJML).html);
 async function sendWelcomeEmail({ name, designation, experience, pastCompanies, profilePicture, senderEmail, senderPassword, receiverEmails, regards, subject }) {
   try {
     const transporter = nodemailer.createTransport({
@@ -218,7 +73,10 @@ async function sendWelcomeEmail({ name, designation, experience, pastCompanies, 
       name,
       designation,
       experience,
-      pastCompanies: pastCompanies.join(', '),
+      pastCompanies: pastCompanies
+      .slice(0, -1)
+      .join(', ')
+      .concat(pastCompanies.length > 1 ? ' and ' + pastCompanies.slice(-1) : ''),
       regards,
     });
 
